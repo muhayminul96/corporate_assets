@@ -119,6 +119,60 @@ def store_asset(request):
     # if data not valid
     return Response({
         'status': 400,
+        'data': serializer.errors,
+        'message': "Something is Wrong"
+    })
+
+
+# for all Asset
+
+
+# get all asset by company id
+@api_view(['GET'])
+def get_all_asset_log(request, company_id):
+    assetLog = AssetLog.objects.filter(employee__company_id=company_id)
+    serializer = AssetLogSerializer(assetLog, many=True)
+    return Response({
+        'status': 200,
         'data': serializer.data,
+    })
+
+
+# store Asset
+
+@api_view(['POST'])
+def store_asset_log(request):
+    data = request.data
+    serializer = AssetLogSerializer(data=data)
+    # check data validation
+    if serializer.is_valid():
+        # get asset by id
+        asset_id = request.data.get('asset')
+        asset = Asset.objects.get(id=asset_id)
+
+        # check asset issued or not
+        if asset.is_available:
+            asset.is_available = False
+            asset.save()
+            serializer.save()
+            return Response({
+                'status': 201,
+                'data': serializer.data,
+                'message': "data saved successfully"
+            })
+        else:
+            return Response({
+                'status': 400,
+                'data': serializer.data,
+                'message': "Asset is not available"
+            })
+
+
+
+
+    # if data not valid
+    return Response({
+        'status': 400,
+        'data': serializer.errors,
         'message': "Something is Wrong"
     })
