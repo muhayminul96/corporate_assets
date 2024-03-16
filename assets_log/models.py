@@ -34,12 +34,12 @@ class Asset(models.Model):
 
 class AssetLog(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+    issued_date = models.DateTimeField(null=True, blank=True)
     returned_date = models.DateTimeField(null=True, blank=True)
     for_days = models.IntegerField()
     is_returned = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.company} -> {self.asset} -> {self.employee} "
+        return f"{self.employee} {self.asset} "
