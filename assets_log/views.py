@@ -104,6 +104,18 @@ def get_all_asset(request, company_id):
     })
 
 
+# get all available asset
+@api_view(['GET'])
+def get_all_available_asset(request, company_id):
+    asset = Asset.objects.filter(company_id=company_id, is_available=True)
+    serializer = AssetSerializer(asset, many=True)
+    return Response({
+        'status': 200,
+        'data': serializer.data,
+    })
+
+
+
 # store Asset
 
 @api_view(['POST'])
@@ -179,7 +191,7 @@ def store_asset_log(request):
 
 # for returned_items
 @csrf_exempt
-@api_view(['POST'])
+@api_view(['PUT'])
 def returned_asset(request, asset_log_id):
     asset_log = AssetLog.objects.get(id=asset_log_id)
     # get asset by id
@@ -187,6 +199,9 @@ def returned_asset(request, asset_log_id):
     asset = Asset.objects.get(id=asset_id)
 
     # asset now available now, and its returned
+    # update return_date and is_retunted flag in asset log
+    # update asset o is_available true
+
     asset.is_available = True
     return_date = request.data.get('returned_date')
     asset_log.returned_date = return_date
