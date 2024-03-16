@@ -152,6 +152,27 @@ def get_all_asset_log(request, company_id):
     })
 
 
+@api_view(['GET'])
+def get_all_asset_log_by_employee(request, employee_id):
+    assetLog = AssetLog.objects.filter(employee_id=employee_id)
+    serializer = AssetLogSerializer(assetLog, many=True)
+    return Response({
+        'status': 200,
+        'data': serializer.data,
+    })
+
+
+@api_view(['GET'])
+def get_all_asset_log_by_asset(request, asset_id):
+    assetLog = AssetLog.objects.filter(asset_id=asset_id)
+    serializer = AssetLogSerializer(assetLog, many=True)
+    return Response({
+        'status': 200,
+        'data': serializer.data,
+    })
+
+
+
 # store Asset
 
 @api_view(['POST'])

@@ -11,6 +11,8 @@ urlpatterns = [
     path('get_all_available_asset/<company_id>', get_all_available_asset),
     path('store_asset', store_asset),
     path('get_all_asset_log/<company_id>', get_all_asset_log),
+    path('get_all_asset_log_by_employee/<employee_id>', get_all_asset_log_by_employee),
+    path('get_all_asset_log_by_asset/<asset_id>', get_all_asset_log_by_asset),
     path('store_asset_log', store_asset_log),
     path('return_asset/<asset_log_id>', returned_asset),
 ]
