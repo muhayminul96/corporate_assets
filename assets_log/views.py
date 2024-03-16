@@ -9,6 +9,12 @@ from .serializers import CompanySerializer, EmployeeSerializer, AssetSerializer,
 
 # Create your views here.
 
+# helper for asset log
+
+
+
+
+
 # for all Api
 
 
@@ -144,31 +150,48 @@ def store_asset(request):
 # get all asset by company id
 @api_view(['GET'])
 def get_all_asset_log(request, company_id):
-    assetLog = AssetLog.objects.filter(employee__company_id=company_id)
-    serializer = AssetLogSerializer(assetLog, many=True)
+    asset_logs = AssetLog.objects.filter(employee__company_id=company_id)
+    serialized_data = []
+    for log in asset_logs:
+        log_data = AssetLogSerializer(log).data
+        log_data['asset_name'] = log.asset.name
+        log_data['employee_name'] = log.employee.name
+        serialized_data.append(log_data)
     return Response({
         'status': 200,
-        'data': serializer.data,
+        'data': serialized_data,
     })
 
 
 @api_view(['GET'])
 def get_all_asset_log_by_employee(request, employee_id):
-    assetLog = AssetLog.objects.filter(employee_id=employee_id)
-    serializer = AssetLogSerializer(assetLog, many=True)
+    asset_logs = AssetLog.objects.filter(employee_id=employee_id)
+    serialized_data = []
+    for log in asset_logs:
+        log_data = AssetLogSerializer(log).data
+        log_data['asset_name'] = log.asset.name
+        log_data['employee_name'] = log.employee.name
+        serialized_data.append(log_data)
     return Response({
         'status': 200,
-        'data': serializer.data,
+        'data': serialized_data,
     })
 
 
+# get all asset log by its id
+
 @api_view(['GET'])
 def get_all_asset_log_by_asset(request, asset_id):
-    assetLog = AssetLog.objects.filter(asset_id=asset_id)
-    serializer = AssetLogSerializer(assetLog, many=True)
+    asset_logs = AssetLog.objects.filter(asset_id=asset_id)
+    serialized_data = []
+    for log in asset_logs:
+        log_data = AssetLogSerializer(log).data
+        log_data['asset_name'] = log.asset.name
+        log_data['employee_name'] = log.employee.name
+        serialized_data.append(log_data)
     return Response({
         'status': 200,
-        'data': serializer.data,
+        'data': serialized_data,
     })
 
 
