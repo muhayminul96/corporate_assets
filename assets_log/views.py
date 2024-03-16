@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import Company,Employee,AssetLog,Asset
-from .serializers import CompanySerializer,EmployeeSerializer,AssetSerializer,AssetLogSerializer
+from .models import Company, Employee, AssetLog, Asset
+from .serializers import CompanySerializer, EmployeeSerializer, AssetSerializer, AssetLogSerializer
 
 
 # Create your views here.
@@ -88,6 +89,7 @@ def store_employee(request):
         'message': "Something is Wrong"
     })
 
+
 # for all Asset
 
 
@@ -167,12 +169,33 @@ def store_asset_log(request):
                 'message': "Asset is not available"
             })
 
-
-
-
     # if data not valid
     return Response({
         'status': 400,
         'data': serializer.errors,
         'message': "Something is Wrong"
+    })
+
+
+# for returned_items
+@csrf_exempt
+@api_view(['POST'])
+def returned_asset(request, asset_log_id):
+    asset_log = AssetLog.objects.get(id=asset_log_id)
+    # get asset by id
+    asset_id = asset_log.asset_id
+    asset = Asset.objects.get(id=asset_id)
+
+    # asset now available now, and its returned
+    asset.is_available = True
+    return_date = request.data.get('returned_date')
+    asset_log.returned_date = return_date
+    asset_log.is_returned = True
+
+    asset.save()
+    asset_log.save()
+
+    return Response({
+        'status': 200,
+        'message': "Asset Returned Successfully"
     })
