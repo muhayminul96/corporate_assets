@@ -87,3 +87,38 @@ def store_employee(request):
         'data': serializer.data,
         'message': "Something is Wrong"
     })
+
+# for all Asset
+
+
+# get all asset by company id
+@api_view(['GET'])
+def get_all_asset(request, company_id):
+    asset = Asset.objects.filter(company_id=company_id)
+    serializer = AssetSerializer(asset, many=True)
+    return Response({
+        'status': 200,
+        'data': serializer.data,
+    })
+
+
+# store Asset
+
+@api_view(['POST'])
+def store_asset(request):
+    data = request.data
+    serializer = AssetSerializer(data=data)
+    # check data validation
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            'status': 201,
+            'data': serializer.data,
+            'message': "data saved successfully"
+        })
+    # if data not valid
+    return Response({
+        'status': 400,
+        'data': serializer.data,
+        'message': "Something is Wrong"
+    })
